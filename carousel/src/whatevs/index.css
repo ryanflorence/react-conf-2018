@@ -1,0 +1,148 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #ddd;
+}
+
+a {
+  color: blue;
+}
+
+[aria-current="page"] {
+  color: red;
+}
+
+.Slide {
+  opacity: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  list-style-type: none;
+  transition: opacity 200ms ease;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.Slide[aria-hidden="true"] {
+  opacity: 0;
+  transition-delay: 200ms;
+  z-index: -1;
+}
+
+.SlideContent {
+  background: hsla(0, 0%, 0%, 0.5);
+  font-weight: 100;
+  text-shadow: 0px 0px 5px hsla(0, 0%, 0%, 1);
+  color: white;
+  max-width: 500px;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.ProgressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.ProgressBar > div {
+  background-color: hsla(0, 100%, 100%, 0.25);
+  height: 20px;
+}
+
+.SlideNavItem > button {
+  all: unset;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 2em;
+  width: 2rem;
+  margin: 5px;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.SlideNavItem > button:focus-visible {
+  background-color: hsla(0, 100%, 100%, 0.33);
+}
+
+.SlideNavItem > button > span {
+  background: hsla(0, 100%, 100%, 0.25);
+  display: inline-block;
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+}
+
+.SlideNavItem > button[aria-current="true"] > span {
+  background: hsla(0, 100%, 100%, 0.75);
+}
+
+.IconButton {
+  border: none;
+  background: none;
+  display: inline-block;
+  padding: 0;
+  width: 3rem;
+  height: 3rem;
+  line-height: 1.8rem;
+  font-size: 2rem;
+  text-align: center;
+  background-color: transparent;
+  color: hsla(0, 100%, 100%, 0.5);
+  outline: none;
+}
+
+button:active {
+  position: relative;
+  top: 1px;
+  left: 1px;
+}
+
+.IconButton:focus-visible {
+  color: hsla(0, 100%, 100%, 0.75);
+  background-color: hsla(0, 100%, 100%, 0.33);
+}
+
+.Carousel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.SlideNav {
+  position: absolute;
+  bottom: 36px;
+  left: 20px;
+  display: flex;
+  padding: 0;
+  justify-content: center;
+  list-style-type: none;
+}
+
+.Controls {
+  position: absolute;
+  right: 20px;
+  bottom: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.Media {
+  font-size: 32px;
+  text-align: center;
+}
