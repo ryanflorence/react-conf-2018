@@ -12,6 +12,9 @@ class Media extends React.Component {
 
   setup() {
     let media = window.matchMedia(this.props.query);
+    if (media.matches !== this.state.matches) {
+      this.setState({ matches: media.matches });
+    }
     let listener = () =>
       this.setState({ matches: media.matches });
     media.addListener(listener);
@@ -22,10 +25,6 @@ class Media extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.query !== this.props.query) {
       this.removeListener();
-      this.setState({
-        matches: window.matchMedia(this.props.query)
-          .matches
-      });
       this.setup();
     }
   }
