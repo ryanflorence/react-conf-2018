@@ -1,17 +1,7 @@
-import React, {
-  useState,
-  useReducer,
-  useEffect,
-  useRef
-} from "react";
+import React, { useState, useReducer, useEffect, useRef } from "react";
 import Alert from "@reach/alert";
 import VisuallyHidden from "@reach/visually-hidden";
-import {
-  FaPlay,
-  FaPause,
-  FaForward,
-  FaBackward
-} from "react-icons/fa";
+import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
 
 import slides from "./whatevs/slides";
 import useProgress from "./useProgress";
@@ -19,23 +9,14 @@ import useProgress from "./useProgress";
 let SLIDE_DURATION = 3000;
 
 function Carousel(props) {
-  return (
-    <section className="Carousel" {...props} />
-  );
+  return <section className="Carousel" {...props} />;
 }
 
 function Slides(props) {
   return <ul {...props} />;
 }
 
-function Slide({
-  isCurrent,
-  takeFocus,
-  image,
-  id,
-  title,
-  children
-}) {
+function Slide({ isCurrent, takeFocus, image, id, title, children }) {
   let ref = useRef();
 
   useEffect(
@@ -83,9 +64,7 @@ function Controls(props) {
 }
 
 function IconButton(props) {
-  return (
-    <button {...props} className="IconButton" />
-  );
+  return <button {...props} className="IconButton" />;
 }
 
 function ProgressBar({ animate, time }) {
@@ -93,19 +72,13 @@ function ProgressBar({ animate, time }) {
 
   return (
     <div className="ProgressBar">
-      <div
-        style={{ width: `${progress * 100}%` }}
-      />
+      <div style={{ width: `${progress * 100}%` }} />
     </div>
   );
 }
 
 function SpacerGif({ width }) {
-  return (
-    <div
-      style={{ display: "inline-block", width }}
-    />
-  );
+  return <div style={{ display: "inline-block", width }} />;
 }
 
 function App() {
@@ -118,9 +91,7 @@ function App() {
             ...state,
             takeFocus: false,
             isPlaying: action.type === "PROGRESS",
-            currentIndex:
-              (state.currentIndex + 1) %
-              slides.length
+            currentIndex: (state.currentIndex + 1) % slides.length
           };
         case "PREV":
           return {
@@ -128,10 +99,7 @@ function App() {
             takeFocus: false,
             isPlaying: false,
             currentIndex:
-              (state.currentIndex -
-                1 +
-                slides.length) %
-              slides.length
+              (state.currentIndex - 1 + slides.length) % slides.length
           };
         case "PLAY":
           return {
@@ -246,8 +214,7 @@ function App() {
 
       <VisuallyHidden>
         <Alert>
-          Item {state.currentIndex + 1} of{" "}
-          {slides.length}
+          Item {state.currentIndex + 1} of {slides.length}
         </Alert>
       </VisuallyHidden>
     </Carousel>

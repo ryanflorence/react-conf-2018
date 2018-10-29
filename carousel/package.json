@@ -58,7 +58,7 @@
     "test": "node scripts/test.js --env=jsdom"
   },
   "prettier": {
-    "printWidth": 52
+    "printWidth": 80
   },
   "jest": {
     "collectCoverageFrom": [
