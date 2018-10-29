@@ -36,8 +36,20 @@ function Slide({
   title,
   children
 }) {
+  let ref = useRef();
+
+  useEffect(
+    () => {
+      if (isCurrent && takeFocus) {
+        ref.current.focus();
+      }
+    },
+    [isCurrent, takeFocus]
+  );
+
   return (
     <li
+      ref={ref}
       aria-hidden={!isCurrent}
       tabIndex="-1"
       aria-labelledby={id}
@@ -77,7 +89,7 @@ function IconButton(props) {
 }
 
 function ProgressBar({ animate, time }) {
-  let progress = 0.5;
+  let progress = useProgress(animate, time);
 
   return (
     <div className="ProgressBar">
@@ -97,7 +109,70 @@ function SpacerGif({ width }) {
 }
 
 function App() {
-  let currentIndex = 0;
+  let [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case "PROGRESS":
+        case "NEXT":
+          return {
+            ...state,
+            takeFocus: false,
+            isPlaying: action.type === "PROGRESS",
+            currentIndex:
+              (state.currentIndex + 1) %
+              slides.length
+          };
+        case "PREV":
+          return {
+            ...state,
+            takeFocus: false,
+            isPlaying: false,
+            currentIndex:
+              (state.currentIndex -
+                1 +
+                slides.length) %
+              slides.length
+          };
+        case "PLAY":
+          return {
+            ...state,
+            takeFocus: false,
+            isPlaying: true
+          };
+        case "PAUSE":
+          return {
+            ...state,
+            takeFocus: false,
+            isPlaying: false
+          };
+        case "GOTO":
+          return {
+            ...state,
+            takeFocus: true,
+            currentIndex: action.index
+          };
+        default:
+          return state;
+      }
+    },
+    {
+      currentIndex: 0,
+      isPlaying: false,
+      takeFocus: false
+    }
+  );
+
+  useEffect(
+    () => {
+      if (state.isPlaying) {
+        let timeout = setTimeout(() => {
+          dispatch({ type: "PROGRESS" });
+        }, SLIDE_DURATION);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [state.currentIndex, state.isPlaying]
+  );
 
   return (
     <Carousel aria-label="Images from Space">
@@ -108,8 +183,8 @@ function App() {
             id={`image-${index}`}
             image={image.img}
             title={image.title}
-            isCurrent={index === currentIndex}
-            takeFocus={null}
+            isCurrent={index === state.currentIndex}
+            takeFocus={state.takeFocus}
             children={image.content}
           />
         ))}
@@ -119,48 +194,60 @@ function App() {
         {slides.map((slide, index) => (
           <SlideNavItem
             key={index}
-            isCurrent={index === currentIndex}
+            isCurrent={index === state.currentIndex}
             aria-label={`Slide ${index + 1}`}
-            onClick={() => {}}
+            onClick={() => {
+              dispatch({ type: "GOTO", index });
+            }}
           />
         ))}
       </SlideNav>
 
       <Controls>
-        {false ? (
+        {state.isPlaying ? (
           <IconButton
             aria-label="Pause"
-            onClick={() => {}}
+            onClick={() => {
+              dispatch({ type: "PAUSE" });
+            }}
             children={<FaPause />}
           />
         ) : (
           <IconButton
             aria-label="Play"
-            onClick={() => {}}
+            onClick={() => {
+              dispatch({ type: "PLAY" });
+            }}
             children={<FaPlay />}
           />
         )}
         <SpacerGif width="10px" />
         <IconButton
           aria-label="Previous Slide"
-          onClick={() => {}}
+          onClick={() => {
+            dispatch({ type: "PREV" });
+          }}
           children={<FaBackward />}
         />
         <IconButton
           aria-label="Next Slide"
-          onClick={() => {}}
+          onClick={() => {
+            dispatch({ type: "NEXT" });
+          }}
           children={<FaForward />}
         />
       </Controls>
 
       <ProgressBar
+        key={state.currentIndex + state.isPlaying}
         time={SLIDE_DURATION}
-        animate={false}
+        animate={state.isPlaying}
       />
 
       <VisuallyHidden>
         <Alert>
-          Item {currentIndex + 1} of {slides.length}
+          Item {state.currentIndex + 1} of{" "}
+          {slides.length}
         </Alert>
       </VisuallyHidden>
     </Carousel>

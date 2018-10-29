@@ -1,62 +1,37 @@
 import React, { useState, useEffect } from "react";
 
-class Media extends React.Component {
-  state = {
-    matches: window.matchMedia(this.props.query)
-      .matches
-  };
+function useMedia(query) {
+  let [matches, setMatches] = useState(
+    window.matchMedia(query).matches
+  );
 
-  componentDidMount() {
-    this.setup();
-  }
+  // cDM, cDU
+  useEffect(
+    () => {
+      let media = window.matchMedia(query);
+      if (media.matches !== matches) {
+        setMatches(media.matches);
+      }
+      let listener = () =>
+        setMatches(media.matches);
+      media.addListener(listener);
+      return () => media.removeListener(listener);
+    },
+    [query]
+  );
 
-  setup() {
-    let media = window.matchMedia(this.props.query);
-    if (media.matches !== this.state.matches) {
-      this.setState({ matches: media.matches });
-    }
-    let listener = () =>
-      this.setState({ matches: media.matches });
-    media.addListener(listener);
-    this.removeListener = () =>
-      media.removeListener(listener);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.query !== this.props.query) {
-      this.removeListener();
-      this.setup();
-    }
-  }
-
-  componentWillUnmount() {
-    this.removeListener();
-  }
-
-  render() {
-    return this.props.children(this.state.matches);
-  }
+  return matches;
 }
 
 function App() {
+  let small = useMedia("(max-width: 400px)");
+  let large = useMedia("(min-width: 800px)");
   return (
-    <Media query="(max-width: 400px)">
-      {small => (
-        <Media query="(min-width: 800px)">
-          {large => (
-            <div className="Media">
-              <h1>Media</h1>
-              <p>
-                Small? {small ? "Yep" : "Nope"}.
-              </p>
-              <p>
-                Large? {large ? "Yep" : "Nope"}.
-              </p>
-            </div>
-          )}
-        </Media>
-      )}
-    </Media>
+    <div className="Media">
+      <h1>Media</h1>
+      <p>Small? {small ? "Yep" : "Nope"}.</p>
+      <p>Large? {large ? "Yep" : "Nope"}.</p>
+    </div>
   );
 }
 
