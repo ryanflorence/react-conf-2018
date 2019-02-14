@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, useRef } from "react";
+import React, { useReducer, useEffect, useRef } from "react";
 import Alert from "@reach/alert";
 import VisuallyHidden from "@reach/visually-hidden";
 import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
